@@ -1,5 +1,14 @@
 # 👁️‍🗨️ ScreenMind
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Platform: macOS](https://img.shields.io/badge/Platform-macOS-blue.svg)](https://www.apple.com/macos/)
+[![Framework: Tauri](https://img.shields.io/badge/Framework-Tauri-2.0-FFC131?logo=tauri&logoColor=black)](https://tauri.app/)
+[![Language: TypeScript](https://img.shields.io/badge/Language-TypeScript-007ACC?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Language: Rust](https://img.shields.io/badge/Language-Rust-000000?logo=rust&logoColor=white)](https://www.rust-lang.org/)
+[![Package Manager: pnpm](https://img.shields.io/badge/Package%20Manager-pnpm-orange?logo=pnpm&logoColor=white)](https://pnpm.io/)
+[![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-green.svg)](https://github.com/yourusername/ScreenMind/releases)
+[![Status: Active](https://img.shields.io/badge/Status-Active-brightgreen.svg)](https://github.com/yourusername/ScreenMind)
+
 > A local AI wellness assistant designed to improve screen habits by tracking attention, reminding users to take breaks, and providing mood check-ins — all while prioritizing user privacy and offline functionality.
 
 ## 🎯 Features
@@ -221,6 +230,130 @@ ScreenMind/
 - [ ] Export statistics to CSV/PDF
 - [ ] Custom break actions and reminders
 - [ ] Multi-platform support (Windows, Linux)
+
+## 🌐 Platform Independence
+
+ScreenMind is currently optimized for macOS but can be adapted for Windows and Linux with the following modifications:
+
+### **Current macOS-Specific Features**
+- **AppleScript Integration**: OSA scripts for notifications and app foregrounding
+- **System Sounds**: macOS-specific sound files (`/System/Library/Sounds/`)
+- **Process Management**: macOS-specific process naming conventions
+- **Bundle Structure**: `.app` bundle format
+
+### **Required Changes for Cross-Platform Support**
+
+#### **Windows Adaptations**
+1. **Notification System**:
+   - Replace AppleScript with Windows API calls
+   - Use `winapi` crate for system notifications
+   - Implement Windows toast notifications
+   - Add Windows sound files (`.wav` format)
+
+2. **App Foregrounding**:
+   - Use Windows API `SetForegroundWindow()`
+   - Handle Windows process naming (`screen-mind-app.exe`)
+   - Implement Windows-specific window management
+
+3. **Build System**:
+   - Add Windows target in `tauri.conf.json`
+   - Configure Windows-specific icons (`.ico` format)
+   - Set up Windows installer (NSIS or MSI)
+
+#### **Linux Adaptations**
+1. **Notification System**:
+   - Replace AppleScript with `notify-send` command
+   - Use `dbus` for system notifications
+   - Implement Linux sound files (`.ogg` or `.wav`)
+   - Add desktop notification integration
+
+2. **App Foregrounding**:
+   - Use X11/Wayland window management
+   - Implement Linux process naming conventions
+   - Handle different Linux desktop environments
+
+3. **Build System**:
+   - Add Linux targets (AppImage, .deb, .rpm)
+   - Configure Linux-specific icons (`.png` format)
+   - Set up Linux package managers
+
+#### **Code Changes Required**
+
+**1. Notification System Refactor**:
+```rust
+// Current macOS-specific code in src-tauri/src/lib.rs
+#[cfg(target_os = "macos")]
+fn send_break_notification() -> Result<String, String> {
+    // AppleScript implementation
+}
+
+#[cfg(target_os = "windows")]
+fn send_break_notification() -> Result<String, String> {
+    // Windows API implementation
+}
+
+#[cfg(target_os = "linux")]
+fn send_break_notification() -> Result<String, String> {
+    // Linux dbus/notify-send implementation
+}
+```
+
+**2. Sound System**:
+```rust
+// Platform-specific sound paths
+#[cfg(target_os = "macos")]
+const SOUND_PATH: &str = "/System/Library/Sounds/Submarine.aiff";
+
+#[cfg(target_os = "windows")]
+const SOUND_PATH: &str = "C:\\Windows\\Media\\chimes.wav";
+
+#[cfg(target_os = "linux")]
+const SOUND_PATH: &str = "/usr/share/sounds/freedesktop/stereo/complete.oga";
+```
+
+**3. Process Management**:
+```rust
+// Platform-specific process names
+#[cfg(target_os = "macos")]
+const PROCESS_NAMES: &[&str] = &["screen-mind-app", "ScreenMind"];
+
+#[cfg(target_os = "windows")]
+const PROCESS_NAMES: &[&str] = &["screen-mind-app.exe", "ScreenMind.exe"];
+
+#[cfg(target_os = "linux")]
+const PROCESS_NAMES: &[&str] = &["screen-mind-app", "screen_mind_app"];
+```
+
+#### **Configuration Updates**
+Update `tauri.conf.json` for multi-platform support:
+```json
+{
+  "bundle": {
+    "targets": ["app", "dmg", "msi", "appimage", "deb"],
+    "identifier": "com.screen-mind.app",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ]
+  }
+}
+```
+
+#### **Testing Strategy**
+1. **Unit Tests**: Platform-specific notification tests
+2. **Integration Tests**: Cross-platform build verification
+3. **Manual Testing**: Verify notifications on each OS
+4. **CI/CD**: GitHub Actions for multi-platform builds
+
+### **Estimated Effort**
+- **Windows Support**: ~2-3 days of development
+- **Linux Support**: ~3-4 days of development
+- **Testing & Polish**: ~1-2 days per platform
+- **Total**: ~1-2 weeks for full cross-platform support
+
+The core timer logic and UI are already platform-independent, making the transition relatively straightforward with the above modifications.
 
 ## 🐛 Known Issues & Solutions
 
