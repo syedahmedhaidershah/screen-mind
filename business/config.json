@@ -1,0 +1,88 @@
+{
+  "app": {
+    "name": "ScreenMind",
+    "version": "0.1.0",
+    "identifier": "com.screen-mind.app"
+  },
+  "timer": {
+    "workSessionDuration": 1200,
+    "breakDuration": 20,
+    "interval": 1000,
+    "progressBarMax": 1200
+  },
+  "time": {
+    "morningThreshold": 14,
+    "timeFormat": {
+      "padStart": 2,
+      "padChar": "0"
+    }
+  },
+  "ui": {
+    "text": {
+      "appTitle": "👁️ ScreenMind",
+      "moodCheckTitle": "How are you today?",
+      "breakReminderTitle": "🕒 Time to look away!",
+      "timerLabel": "Screen Time",
+      "footerMessage": "Remember: Every 20 minutes, look 20 feet away for 20 seconds",
+      "buttons": {
+        "start": "▶️ Start",
+        "pause": "⏸️ Pause",
+        "reset": "🔄 Reset",
+        "takeBreak": "Taking a Break Now",
+        "skipBreak": "Skip This Break",
+        "deepBreath": "🎧 Deep Breath",
+        "stretch": "🚶 Stretch",
+        "drinkWater": "💧 Drink Water"
+      },
+      "stats": {
+        "breaksTaken": "💪 {count} breaks",
+        "streak": "🔥 {count} day streak"
+      }
+    },
+    "moodOptions": {
+      "great": {
+        "emoji": "😃",
+        "text": "😃 Great!"
+      },
+      "okay": {
+        "emoji": "😐",
+        "text": "😐 Okay"
+      },
+      "notGreat": {
+        "emoji": "😟",
+        "text": "😟 Not great"
+      }
+    }
+  },
+  "defaults": {
+    "stats": {
+      "breaksTaken": 0,
+      "breaksSkipped": 0,
+      "totalScreenTime": 0,
+      "streak": 0
+    },
+    "moodData": {
+      "morning": "",
+      "sleep": "",
+      "anxiety": "",
+      "energy": ""
+    },
+    "timer": {
+      "currentTime": 0,
+      "breakCountdown": 20
+    }
+  },
+  "features": {
+    "moodCheck": {
+      "enabled": true,
+      "showOnFirstLaunch": true
+    },
+    "breakReminder": {
+      "enabled": true,
+      "autoStart": true
+    },
+    "quickActions": {
+      "enabled": true
+    }
+  }
+} 
