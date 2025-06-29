@@ -11,6 +11,22 @@
 
 > A local AI wellness assistant designed to improve screen habits by tracking attention, reminding users to take breaks, and providing mood check-ins — all while prioritizing user privacy and offline functionality.
 
+## 📋 Table of Contents
+
+- [Features](#-features)
+- [Quick Start](#-quick-start)
+- [Installation](#installation)
+- [Usage](#-usage)
+- [Control Flows](#-control-flows--usage)
+- [Technical Architecture](#️-technical-architecture)
+- [Project Structure](#-project-structure)
+- [Configuration](#-configuration)
+- [Development](#-development)
+- [Contributing](#-contributing)
+- [Troubleshooting](#-troubleshooting)
+- [Privacy & Security](#-privacy--security)
+- [License](#-license)
+
 ## 🎯 Features
 
 - **20-20-20 Timer**: Enforces the eye health rule (every 20 minutes, look 20 feet away for 20 seconds)
@@ -21,13 +37,16 @@
 - **Dark Mode Interface**: Designed to reduce eye strain
 - **Privacy-First**: No webcam access unless explicitly opted in
 - **Session Statistics**: Track breaks taken, skipped, and streaks
+- **Customizable Configuration**: Easy-to-modify settings via JSON config
+- **Offline Capable**: Works without internet connection
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 
+- **macOS**: 10.15 (Catalina) or later
 - [Node.js](https://nodejs.org/) (v18 or higher)
-- [Rust](https://rustup.rs/) (for Tauri)
+- [Rust](https://rustup.rs/) (for Tauri backend)
 - [pnpm](https://pnpm.io/) (recommended package manager)
 
 ### Installation
@@ -56,6 +75,26 @@ pnpm tauri build
 
 The built application will be available in `src-tauri/target/release/bundle/`:
 - **macOS**: `ScreenMind.app` (drag to Applications) or `ScreenMind_0.1.0_aarch64.dmg` (installer)
+
+## 📱 Usage
+
+### First Launch
+1. Launch ScreenMind
+2. If it's morning (before 12 PM), you'll see a mood check-in
+3. Select your mood: 😊 Great, 😐 Okay, or 😞 Not Great
+4. The 20-20-20 timer will automatically start
+
+### Daily Use
+1. **Timer**: The app tracks your screen time with a 20-minute countdown
+2. **Break Reminders**: When the timer reaches 20 minutes, you'll get a notification
+3. **Break Options**: Choose to "Take Break" (20 seconds) or "Skip Break"
+4. **Statistics**: View your break history and streaks in real-time
+
+### Quick Actions (Optional)
+During breaks, you can access quick wellness actions:
+- **Deep Breath**: Guided breathing reminder
+- **Stretch**: Simple stretching suggestions
+- **Drink Water**: Hydration reminder
 
 ## 🧭 Control Flows & Usage
 
@@ -150,12 +189,13 @@ Timer Controls → Start/Pause → Reset → Statistics Update
 - **State Management**: React hooks for timer, break, mood, and statistics
 - **Timer Logic**: `useEffect` with `setInterval` for precise timing
 - **Break System**: Complex state management for notification acknowledgment
-- **UI Components**: Modern CSS with responsive design
+- **UI Components**: Modern CSS with responsive design and glassmorphism effects
 
 ### Backend (Tauri + Rust)
 - **OSA Integration**: AppleScript for system notifications and app foregrounding
 - **Process Management**: Multiple methods to bring app to front
 - **Error Handling**: Robust fallback mechanisms for notification failures
+- **Native Performance**: Rust backend ensures fast, efficient operation
 
 ### Configuration System
 - **JSON Config**: `business/config.json` for all app settings
@@ -170,234 +210,222 @@ ScreenMind/
 ├── src/                    # React frontend
 │   ├── App.tsx            # Main application component with all flows
 │   ├── App.css            # Modern styling with glassmorphism
-│   └── main.tsx           # React entry point
+│   ├── main.tsx           # React entry point
+│   └── vite-env.d.ts      # Vite environment types
 ├── src-tauri/             # Tauri backend
 │   ├── src/               # Rust source code
 │   │   ├── lib.rs         # OSA script integration
 │   │   └── main.rs        # Tauri app entry
 │   ├── scripts/           # AppleScript files
-│   │   └── break_notification.scpt  # Notification and foreground logic
+│   │   ├── break_notification.scpt  # Notification and foreground logic
+│   │   └── test_notification.scpt   # Testing script
 │   ├── tauri.conf.json    # Tauri configuration
-│   └── Cargo.toml         # Rust dependencies
+│   ├── Cargo.toml         # Rust dependencies
+│   └── capabilities/      # Tauri security capabilities
 ├── business/              # Configuration
-│   └── config.json        # App settings, UI text, feature flags
+│   ├── config.json        # App settings, UI text, feature flags
+│   └── README.md          # Configuration documentation
 ├── public/                # Static assets
-└── package.json           # Node.js dependencies
+│   ├── tauri.svg          # Tauri logo
+│   └── vite.svg           # Vite logo
+├── package.json           # Node.js dependencies
+├── tsconfig.json          # TypeScript configuration
+├── vite.config.ts         # Vite build configuration
+└── LICENSE                # MIT License
 ```
 
-## 🎨 Design Philosophy
+## ⚙️ Configuration
 
-- **Minimalist**: Clean, distraction-free interface
-- **Accessible**: High contrast, readable fonts
-- **Responsive**: Works on different screen sizes
-- **Non-intrusive**: Subtle notifications that don't interrupt workflow
-- **User Control**: Always wait for user acknowledgment before actions
+ScreenMind is highly configurable through the `business/config.json` file. See the [Configuration Documentation](business/README.md) for detailed information on:
 
-## 🔐 Privacy & Security
+- **Timer Settings**: Customize work session and break durations
+- **UI Text**: Localize all interface text
+- **Feature Flags**: Enable/disable specific features
+- **Time Settings**: Configure morning check-in thresholds
 
-- **Local-First**: All data stored on your device
-- **No Telemetry**: No data collection or analytics
-- **Offline Capable**: Works without internet connection
-- **Open Source**: Transparent codebase for community review
-- **System Integration**: Uses native macOS notifications and sounds
+### Quick Configuration Examples
 
-## 🚧 Development Status
-
-### ✅ Completed (v0.1.0)
-- [x] Complete 20-20-20 timer with precise timing
-- [x] Morning mood check-in system with emoji responses
-- [x] Break reminder system with OSA integration
-- [x] System notifications with sound and app foregrounding
-- [x] User acknowledgment system with fallback mechanisms
-- [x] Break countdown with user action buttons
-- [x] Session statistics tracking (breaks taken, skipped, streaks)
-- [x] Modern dark theme UI with glassmorphism effects
-- [x] Responsive design for different screen sizes
-- [x] Configuration system for easy customization
-- [x] Production build system with DMG installer
-
-### 🔄 In Progress
-- [ ] Local data persistence (SQLite/JSON)
-- [ ] Settings configuration panel
-- [ ] Statistics dashboard with charts
-- [ ] Custom break duration settings
-
-### 📋 Planned Features
-- [ ] Mouse activity tracking for automatic break detection
-- [ ] Eye strain detection (optional webcam integration)
-- [ ] Browser extension integration
-- [ ] Calendar integration for break scheduling
-- [ ] Export statistics to CSV/PDF
-- [ ] Custom break actions and reminders
-- [ ] Multi-platform support (Windows, Linux)
-
-## 🌐 Platform Independence
-
-ScreenMind is currently optimized for macOS but can be adapted for Windows and Linux with the following modifications:
-
-### **Current macOS-Specific Features**
-- **AppleScript Integration**: OSA scripts for notifications and app foregrounding
-- **System Sounds**: macOS-specific sound files (`/System/Library/Sounds/`)
-- **Process Management**: macOS-specific process naming conventions
-- **Bundle Structure**: `.app` bundle format
-
-### **Required Changes for Cross-Platform Support**
-
-#### **Windows Adaptations**
-1. **Notification System**:
-   - Replace AppleScript with Windows API calls
-   - Use `winapi` crate for system notifications
-   - Implement Windows toast notifications
-   - Add Windows sound files (`.wav` format)
-
-2. **App Foregrounding**:
-   - Use Windows API `SetForegroundWindow()`
-   - Handle Windows process naming (`screen-mind-app.exe`)
-   - Implement Windows-specific window management
-
-3. **Build System**:
-   - Add Windows target in `tauri.conf.json`
-   - Configure Windows-specific icons (`.ico` format)
-   - Set up Windows installer (NSIS or MSI)
-
-#### **Linux Adaptations**
-1. **Notification System**:
-   - Replace AppleScript with `notify-send` command
-   - Use `dbus` for system notifications
-   - Implement Linux sound files (`.ogg` or `.wav`)
-   - Add desktop notification integration
-
-2. **App Foregrounding**:
-   - Use X11/Wayland window management
-   - Implement Linux process naming conventions
-   - Handle different Linux desktop environments
-
-3. **Build System**:
-   - Add Linux targets (AppImage, .deb, .rpm)
-   - Configure Linux-specific icons (`.png` format)
-   - Set up Linux package managers
-
-#### **Code Changes Required**
-
-**1. Notification System Refactor**:
-```rust
-// Current macOS-specific code in src-tauri/src/lib.rs
-#[cfg(target_os = "macos")]
-fn send_break_notification() -> Result<String, String> {
-    // AppleScript implementation
-}
-
-#[cfg(target_os = "windows")]
-fn send_break_notification() -> Result<String, String> {
-    // Windows API implementation
-}
-
-#[cfg(target_os = "linux")]
-fn send_break_notification() -> Result<String, String> {
-    // Linux dbus/notify-send implementation
-}
-```
-
-**2. Sound System**:
-```rust
-// Platform-specific sound paths
-#[cfg(target_os = "macos")]
-const SOUND_PATH: &str = "/System/Library/Sounds/Submarine.aiff";
-
-#[cfg(target_os = "windows")]
-const SOUND_PATH: &str = "C:\\Windows\\Media\\chimes.wav";
-
-#[cfg(target_os = "linux")]
-const SOUND_PATH: &str = "/usr/share/sounds/freedesktop/stereo/complete.oga";
-```
-
-**3. Process Management**:
-```rust
-// Platform-specific process names
-#[cfg(target_os = "macos")]
-const PROCESS_NAMES: &[&str] = &["screen-mind-app", "ScreenMind"];
-
-#[cfg(target_os = "windows")]
-const PROCESS_NAMES: &[&str] = &["screen-mind-app.exe", "ScreenMind.exe"];
-
-#[cfg(target_os = "linux")]
-const PROCESS_NAMES: &[&str] = &["screen-mind-app", "screen_mind_app"];
-```
-
-#### **Configuration Updates**
-Update `tauri.conf.json` for multi-platform support:
+**Change to 25-5-25 Timer (25 min work, 5 min break):**
 ```json
 {
-  "bundle": {
-    "targets": ["app", "dmg", "msi", "appimage", "deb"],
-    "identifier": "com.screen-mind.app",
-    "icon": [
-      "icons/32x32.png",
-      "icons/128x128.png",
-      "icons/icon.icns",
-      "icons/icon.ico"
-    ]
+  "timer": {
+    "workSessionDuration": 1500,
+    "breakDuration": 300,
+    "progressBarMax": 1500
   }
 }
 ```
 
-#### **Testing Strategy**
-1. **Unit Tests**: Platform-specific notification tests
-2. **Integration Tests**: Cross-platform build verification
-3. **Manual Testing**: Verify notifications on each OS
-4. **CI/CD**: GitHub Actions for multi-platform builds
+**Disable Mood Check-ins:**
+```json
+{
+  "features": {
+    "moodCheck": {
+      "enabled": false
+    }
+  }
+}
+```
 
-### **Estimated Effort**
-- **Windows Support**: ~2-3 days of development
-- **Linux Support**: ~3-4 days of development
-- **Testing & Polish**: ~1-2 days per platform
-- **Total**: ~1-2 weeks for full cross-platform support
+## 🛠️ Development
 
-The core timer logic and UI are already platform-independent, making the transition relatively straightforward with the above modifications.
+### Development Commands
 
-## 🐛 Known Issues & Solutions
+```bash
+# Start development server
+pnpm tauri dev
 
-### Notification Issues
-- **Problem**: Notifications not appearing
-- **Solution**: Check macOS notification permissions for ScreenMind
-- **Workaround**: Use fallback buttons in the app
+# Build for production
+pnpm tauri build
 
-### App Foreground Issues
-- **Problem**: App doesn't come to front automatically
-- **Solution**: OSA script tries multiple methods; manual clicking may be needed
-- **Note**: This is expected behavior in development mode
+# Preview production build
+pnpm preview
 
-### Timer Precision
-- **Problem**: Timer may drift slightly over long sessions
-- **Solution**: Timer resets every 20 minutes, minimizing drift impact
+# Run Rust tests
+cd src-tauri && cargo test
+```
+
+### Development Environment Setup
+
+1. **Install Rust Toolchain**
+   ```bash
+   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+   source ~/.cargo/env
+   ```
+
+2. **Install Node.js Dependencies**
+   ```bash
+   pnpm install
+   ```
+
+3. **Install Tauri CLI**
+   ```bash
+   pnpm add -D @tauri-apps/cli
+   ```
+
+### Code Style
+
+- **TypeScript**: Strict mode enabled, ESLint recommended
+- **Rust**: Standard Rust formatting with `cargo fmt`
+- **CSS**: Modern CSS with glassmorphism design patterns
+- **Comments**: Comprehensive documentation for complex flows
 
 ## 🤝 Contributing
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+We welcome contributions! Please see our contributing guidelines:
+
+### How to Contribute
+
+1. **Fork the repository**
+2. **Create a feature branch**: `git checkout -b feature/amazing-feature`
+3. **Make your changes**: Follow the code style guidelines
+4. **Test thoroughly**: Ensure all flows work correctly
+5. **Commit your changes**: `git commit -m 'Add amazing feature'`
+6. **Push to the branch**: `git push origin feature/amazing-feature`
+7. **Open a Pull Request**: Provide clear description of changes
 
 ### Development Guidelines
-- Follow the existing code structure and patterns
-- Test all control flows before submitting
-- Update configuration files for new features
-- Ensure OSA scripts work in both dev and production
+
+- **Test all user flows**: Morning check-in, timer, breaks, notifications
+- **Update documentation**: Keep README and config docs current
+- **Follow privacy principles**: No data collection, local-first approach
+- **Maintain accessibility**: Ensure app works for all users
+
+### Testing
+
+```bash
+# Test notification system
+cd src-tauri/scripts
+osascript test_notification.scpt
+
+# Test Rust backend
+cd src-tauri
+cargo test
+
+# Test frontend build
+pnpm build
+```
+
+## 🔧 Troubleshooting
+
+### Common Issues
+
+**Notification Not Working**
+- Check macOS notification permissions
+- Ensure app has accessibility permissions
+- Try running `test_notification.scpt` manually
+
+**Build Errors**
+- Ensure Rust toolchain is up to date: `rustup update`
+- Clear cargo cache: `cargo clean`
+- Check Tauri version compatibility
+
+**Timer Not Accurate**
+- Check system time settings
+- Ensure app isn't being throttled by macOS
+- Verify timer configuration in `config.json`
+
+### Debug Mode
+
+Enable debug logging by modifying `src-tauri/tauri.conf.json`:
+```json
+{
+  "tauri": {
+    "cli": {
+      "devPath": "http://localhost:1420",
+      "distDir": "../dist"
+    }
+  }
+}
+```
+
+### Performance Issues
+
+- **High CPU Usage**: Check for infinite loops in timer logic
+- **Memory Leaks**: Ensure proper cleanup in React effects
+- **Slow Notifications**: Verify OSA script execution time
+
+## 🔐 Privacy & Security
+
+### Privacy-First Design
+
+- **Local-First**: All data stored on your device
+- **No Telemetry**: No data collection or analytics
+- **Offline Capable**: Works without internet connection
+- **No Accounts**: No registration or login required
+
+### Data Storage
+
+- **Local Files**: All data stored in app's local directory
+- **No Cloud Sync**: Data never leaves your device
+- **User Control**: Complete control over your data
+- **Transparent**: Open source code for full transparency
+
+### Security Features
+
+- **Sandboxed**: Tauri provides native security isolation
+- **No Network Access**: App doesn't require internet
+- **Minimal Permissions**: Only requests necessary system access
+- **Code Review**: All code is open source and reviewable
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](https://opensource.org/license/mit) file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+### License Summary
+
+- **Permitted**: Use, modify, distribute, and commercial use
+- **Required**: Include license and copyright notice
+- **Not Provided**: Warranty or liability
+- **Attribution**: Credit ScreenMind Team
 
 ## 🙏 Acknowledgments
 
-- Inspired by the 20-20-20 rule for eye health
-- Built with [Tauri](https://tauri.app/) for cross-platform desktop apps
-- Designed for digital workers and developers
-- Uses native macOS integration for optimal user experience
+- **Tauri Team**: For the excellent desktop app framework
+- **React Team**: For the powerful frontend library
+- **Rust Team**: For the safe and fast systems language
+- **Open Source Community**: For inspiration and tools
 
 ---
 
-**Remember**: Every 20 minutes, look 20 feet away for 20 seconds! 👁️‍🗨️
-
-*Your eyes will thank you.*
+**Made with ❤️ for better screen habits and eye health**
