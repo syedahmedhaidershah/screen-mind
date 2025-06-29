@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Platform: macOS](https://img.shields.io/badge/Platform-macOS-blue.svg)](https://www.apple.com/macos/)
-[![Framework: Tauri](https://img.shields.io/badge/Framework-Tauri-2.0-FFC131?logo=tauri&logoColor=black)](https://tauri.app/)
+[![Framework: Tauri](https://img.shields.io/badge/Framework-Tauri-FFC131.svg)](https://tauri.app/)
 [![Language: TypeScript](https://img.shields.io/badge/Language-TypeScript-007ACC?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Language: Rust](https://img.shields.io/badge/Language-Rust-000000?logo=rust&logoColor=white)](https://www.rust-lang.org/)
 [![Package Manager: pnpm](https://img.shields.io/badge/Package%20Manager-pnpm-orange?logo=pnpm&logoColor=white)](https://pnpm.io/)
